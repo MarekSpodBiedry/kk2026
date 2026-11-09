@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konkurs Krasomówczy 2026</title>
+<style>
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:600;font-display:block;src:url(fonts/playfair-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:600;font-display:block;src:url(fonts/playfair-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:block;src:url(fonts/inter-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:block;src:url(fonts/inter-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:block;src:url(fonts/inter-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:block;src:url(fonts/inter-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Macondo';font-style:normal;font-weight:400;font-display:block;src:url(fonts/macondo-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#fff}
+#stage{position:fixed;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:#fff;overflow:hidden}
+#stage h1,#stage h2,#stage p{margin:0}
+.slide{position:absolute;left:0;top:0;width:1920px;height:1080px;box-sizing:border-box;visibility:hidden}
+#stage.ready .slide.on{visibility:visible}
+#hex{position:absolute;left:0;top:0;width:240px;height:1080px}
+#herb{position:absolute;right:120px;top:56px;width:170px;height:170px;object-fit:contain}
+#timer-container{position:fixed;bottom:5vh;right:5vh;width:15%;display:flex;justify-content:center;align-items:center;user-select:none;background:#000;border-radius:12px;padding:1vh;font-family:"Macondo",cursive;color:#fff}
+#timer-container.hidden{opacity:0;pointer-events:none}
+#timer{display:flex;justify-content:center;align-items:center;font-size:3vw}
+.digit{width:.8em;text-align:center;margin:0 -.05em}
+.flash-white{animation:flashWhite .3s ease}
+@keyframes flashWhite{0%{color:#fff}50%{color:#000}100%{color:#fff}}
+@keyframes flashRed{0%{color:rgb(255,50,50)}50%{color:#fff}100%{color:rgb(255,50,50)}}
+.flashing-red{animation:flashRed 1s infinite}
+#gate{position:absolute;left:0;top:0;width:1920px;height:1080px;box-sizing:border-box;padding:240px 120px 200px 256px;background:#fff;color:#1a1a1a;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px;font-family:'Inter',Arial,sans-serif}
+#gate h1{font-family:'Playfair Display',Georgia,serif;font-size:200px;font-weight:600;line-height:.95;color:#dc143c;text-align:center}
+#field{position:relative;height:57.2px;display:flex;justify-content:center;align-items:center}
+#pass{font:400 44px 'Inter',Arial,sans-serif;width:560px;padding:12px 0;border:0;border-bottom:3px solid #dc143c;border-radius:0;outline:0;color:#1a1a1a;caret-color:#dc143c;background:transparent;box-sizing:border-box;text-align:center}
+#pass::placeholder{color:#5d626c;opacity:1}
+#msg{position:absolute;top:96px;left:0;right:0;font-size:32px;line-height:1.3;color:#dc143c;text-align:center}
+</style>
+</head>
+<body>
+<div id="stage">
+<section id="tytul" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px">
+<h1 style="font-family:'Playfair Display', Georgia, serif;font-size:200px;font-weight:600;line-height:0.95;color:#dc143c;text-align:center">Konkurs Krasomówczy</h1>
+<p style="font-size:44px;line-height:1.3;color:#5d626c;text-align:center">10 listopada 2026</p>
+<p style="position:absolute;left:256px;width:1544px;bottom:64px;font-size:38px;font-weight:600;line-height:1.3;color:#dc143c;text-align:center">Oprawa i realizacja: <span data-name="credit"></span></p>
+</section>
+<section id="rocznica" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:row;justify-content:center;align-items:center;gap:72px">
+<p style="font-size:280px;font-weight:600;line-height:1;letter-spacing:-8px;color:#dc143c">108.</p>
+<div style="display:flex;flex-direction:column;gap:32px;width:600px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:88px;font-weight:600;line-height:1.05">rocznica odzyskania przez Polskę niepodległości</h2>
+<p style="font-size:44px;font-weight:600;line-height:1.3;color:#dc143c">11 listopada 1918</p>
+</div>
+<p style="position:absolute;left:256px;width:1544px;bottom:64px;font-size:38px;font-weight:600;line-height:1.3;color:#dc143c;text-align:center">Oprawa i realizacja: <span data-name="credit"></span></p>
+</section>
+<section id="wyklad" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:140px;font-weight:600;line-height:1;text-align:center;width:1300px">Łódzkie drogi do niepodległości</h2>
+<p style="font-size:44px;line-height:1.3;text-align:center">wykład <span style="color:#dc143c" data-name="nawrot"></span> z łódzkiego oddziału IPN</p>
+</section>
+<section id="zasady" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:120px;font-weight:600;line-height:1.1;text-align:center;width:1400px"><span style="color:#dc143c">Pięć minut</span> na wystąpienie</h2>
+<p style="font-size:48px;line-height:1.3;text-align:center;color:#5d626c">Można korzystać z&#160;tekstów i&#160;własnych notatek.</p>
+</section>
+<section id="jury" class="slide" style="display:flex; flex-direction:column; gap:72px; align-items:center; justify-content:center; padding:240px 120px 200px 256px; background:#ffffff">
+  <h2 style="font-family:'Playfair Display', Georgia, serif; font-size:120px; font-weight:600; line-height:1.1; text-align:center; color:#1a1a1a">Jury ocenia</h2>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:20px">
+    <p style="font-family:Inter, Arial, sans-serif; font-size:52px; line-height:1.25; text-align:center; color:#1a1a1a">treść</p>
+    <p style="font-family:Inter, Arial, sans-serif; font-size:52px; line-height:1.25; text-align:center; color:#1a1a1a">zachowanie na&nbsp;scenie</p>
+    <p style="font-family:Inter, Arial, sans-serif; font-size:52px; line-height:1.25; text-align:center; color:#1a1a1a">ogólne wrażenie</p>
+    <p style="font-family:Inter, Arial, sans-serif; font-size:52px; line-height:1.25; text-align:center; color:#1a1a1a">czas</p>
+  </div>
+</section>
+<section id="u-1a" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Wincenty Witos - pierwszy chłopski trybun ludowy RP</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-1a"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 1a</p>
+</div>
+</div>
+</section>
+<section id="u-1b" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Witold Pilecki - żywot w&#160;służbie Ojczyzny</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-1b"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 1b</p>
+</div>
+</div>
+</section>
+<section id="u-1c" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Przebój</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-1c"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 1c</p>
+</div>
+</div>
+</section>
+<section id="u-2ab" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center;white-space:nowrap">Przebaczamy i&#160;prosimy<br>o&#160;przebaczenie - polskość<br>i&#160;człowieczeństwo</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-2ab"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 2ab</p>
+</div>
+</div>
+</section>
+<section id="u-2c" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Koperta pełna wiedzy</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-2c"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 2c</p>
+</div>
+</div>
+</section>
+<section id="u-2d" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Serca z&#160;piersi nie wyrwiecie</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-2d"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 2d</p>
+</div>
+</div>
+</section>
+<section id="u-2e" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Więcej niż nazwisko w&#160;hymnie</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-2e"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 2e</p>
+</div>
+</div>
+</section>
+<section id="u-3a" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Generał Tadeusz Kutrzeba - czy można było lepiej?</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-3a"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 3a</p>
+</div>
+</div>
+</section>
+<section id="u-3b" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Janusz Korczak - wierność do końca</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-3b"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 3b</p>
+</div>
+</div>
+</section>
+<section id="u-3c" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Raport z&#160;samego środka piekła</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-3c"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 3c</p>
+</div>
+</div>
+</section>
+<section id="u-3d" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+<div style="width:1400px;display:flex;flex-direction:column;align-items:center;gap:56px">
+<h2 style="font-family:'Playfair Display', Georgia, serif;font-size:128px;font-weight:600;line-height:1.02;text-align:center">Czy można przegrać bitwę, a&#160;zwyciężyć w&#160;historii?</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<p style="font-size:48px;font-weight:600;line-height:1.25;color:#dc143c" data-name="u-3d"></p>
+<p style="font-size:36px;line-height:1.3;color:#5d626c">klasa 3d</p>
+</div>
+</div>
+</section>
+<section id="glosowanie" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px">
+<h1 style="font-family:'Playfair Display', Georgia, serif;font-size:240px;font-weight:600;line-height:1;color:#dc143c;text-align:center">Głosowanie</h1>
+</section>
+<section id="werdykt" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px">
+<h1 style="font-family:'Playfair Display', Georgia, serif;font-size:240px;font-weight:600;line-height:1;color:#dc143c;text-align:center">Werdykt</h1>
+</section>
+<section id="publicznosc" class="slide" style="background:#ffffff;color:#1a1a1a;font-family:'Inter', Arial, sans-serif;padding:240px 120px 200px 256px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px">
+<h1 style="font-family:'Playfair Display', Georgia, serif;font-size:200px;font-weight:600;line-height:1;color:#dc143c;text-align:center">Głos publiczności</h1>
+</section>
+<form id="gate" autocomplete="off">
+<h1>Konkurs Krasomówczy</h1>
+<div id="field">
+<input id="pass" type="password" placeholder="Hasło" aria-label="Hasło" autofocus autocomplete="off">
+<p id="msg"></p>
+</div>
+</form>
+<svg id="hex" aria-hidden="true" viewBox="0 0 240 1080" xmlns="http://www.w3.org/2000/svg"><polygon points="53.1,0.0 16.5,63.3 -56.5,63.3 -93.1,0.0 -56.5,-63.3 16.5,-63.3" fill="#dc143c"/><polygon points="53.1,147.2 16.5,210.5 -56.5,210.5 -93.1,147.2 -56.5,83.9 16.5,83.9" fill="#dc143c"/><polygon points="53.1,294.4 16.5,357.8 -56.5,357.8 -93.1,294.4 -56.5,231.1 16.5,231.1" fill="#dc143c"/><polygon points="53.1,441.7 16.5,505.0 -56.5,505.0 -93.1,441.7 -56.5,378.4 16.5,378.4" fill="#dc143c"/><polygon points="53.1,588.9 16.5,652.2 -56.5,652.2 -93.1,588.9 -56.5,525.6 16.5,525.6" fill="#dc143c"/><polygon points="53.1,736.1 16.5,799.4 -56.5,799.4 -93.1,736.1 -56.5,672.8 16.5,672.8" fill="#dc143c"/><polygon points="53.1,883.3 16.5,946.7 -56.5,946.7 -93.1,883.3 -56.5,820.0 16.5,820.0" fill="#dc143c"/><polygon points="53.1,1030.6 16.5,1093.9 -56.5,1093.9 -93.1,1030.6 -56.5,967.3 16.5,967.3" fill="#dc143c"/><polygon points="180.6,-73.6 144.1,-10.3 71.0,-10.3 34.4,-73.6 71.0,-136.9 144.1,-136.9" fill="#dc143c"/><polygon points="180.6,73.6 144.1,136.9 71.0,136.9 34.4,73.6 71.0,10.3 144.1,10.3" fill="#dc143c"/><polygon points="180.6,220.8 144.1,284.1 71.0,284.1 34.4,220.8 71.0,157.5 144.1,157.5" fill="#dc143c"/><polygon points="180.6,368.1 144.1,431.4 71.0,431.4 34.4,368.1 71.0,304.8 144.1,304.8" fill="#dc143c"/><polygon points="180.6,515.3 144.1,578.6 71.0,578.6 34.4,515.3 71.0,452.0 144.1,452.0" fill="#dc143c"/><polygon points="180.6,662.5 144.1,725.8 71.0,725.8 34.4,662.5 71.0,599.2 144.1,599.2" fill="#dc143c"/><polygon points="180.6,809.7 144.1,873.0 71.0,873.0 34.4,809.7 71.0,746.4 144.1,746.4" fill="#dc143c"/><polygon points="180.6,957.0 144.1,1020.3 71.0,1020.3 34.4,957.0 71.0,893.7 144.1,893.7" fill="#dc143c"/><polygon points="180.6,1104.2 144.1,1167.5 71.0,1167.5 34.4,1104.2 71.0,1040.9 144.1,1040.9" fill="#dc143c"/></svg>
+<img id="herb" src="herb.png" alt="Herb Publicznego Liceum Ogólnokształcącego Uniwersytetu Łódzkiego">
+</div>
+<div id="timer-container" class="hidden"><div id="timer"></div></div>
+<script src="names.enc.js"></script>
+<script>
+const FIRST_SPEAKER = 5, LAST_SPEAKER = 15;
+const stage = document.getElementById('stage');
+const slides = [...document.querySelectorAll('.slide')];
+const gate = document.getElementById('gate');
+const pass = document.getElementById('pass');
+const msg = document.getElementById('msg');
+const timerContainer = document.getElementById('timer-container');
+const timerDisplay = document.getElementById('timer');
+let idx = 0, unlocked = false;
+
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `translate(${(innerWidth - 1920 * s) / 2}px,${(innerHeight - 1080 * s) / 2}px) scale(${s})`;
+}
+addEventListener('resize', fit);
+fit();
+
+function show(i) {
+  slides[idx].classList.remove('on');
+  idx = i;
+  slides[idx].classList.add('on');
+  timerContainer.classList.toggle('hidden', !(idx >= FIRST_SPEAKER && idx <= LAST_SPEAKER));
+}
+
+let totalSeconds = 300, interval = null, running = false;
+
+function renderTime() {
+  timerDisplay.classList.toggle('flashing-red', totalSeconds <= 0);
+  timerDisplay.innerHTML = '';
+  const negative = totalSeconds < 0;
+  const absSec = Math.abs(totalSeconds);
+  const min = Math.floor(absSec / 60);
+  const sec = absSec % 60;
+  const str = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  for (const char of [negative ? '-' : ' ', str[0], str[1], str[2], str[3], str[4], ' ']) {
+    const d = document.createElement('div');
+    d.classList.add('digit');
+    d.textContent = char;
+    timerDisplay.appendChild(d);
+  }
+}
+
+function startTimer() {
+  if (running) return;
+  running = true;
+  interval = setInterval(() => {
+    totalSeconds--;
+    renderTime();
+    if ([60, 120, 180, 240].includes(totalSeconds)) flashTextWhite();
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(interval);
+  running = false;
+}
+
+function resetTimer() {
+  pauseTimer();
+  totalSeconds = 300;
+  renderTime();
+}
+
+function flashTextWhite() {
+  timerDisplay.classList.add('flash-white');
+  setTimeout(() => timerDisplay.classList.remove('flash-white'), 300);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!unlocked) return;
+  switch (e.key.toLowerCase()) {
+    case 'arrowright':
+      if (idx < slides.length - 1) show(idx + 1);
+      resetTimer();
+      break;
+    case 'arrowleft':
+      if (idx > 0) show(idx - 1);
+      resetTimer();
+      break;
+    case 'arrowup':
+      totalSeconds++;
+      renderTime();
+      break;
+    case 'arrowdown':
+      totalSeconds--;
+      renderTime();
+      break;
+    case ' ':
+      startTimer();
+      break;
+    case 'p':
+      pauseTimer();
+      break;
+    case 'r':
+      resetTimer();
+      break;
+    case 'h':
+      timerContainer.classList.toggle('hidden');
+      break;
+  }
+});
+
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+async function decryptNames(password) {
+  const enc = window.KK_ENC;
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(enc.salt), iterations: enc.iter }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(enc.iv) }, key, b64(enc.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+async function assetsReady() {
+  const polish = 'ĄąĆćĘęŁłŃńÓóŚśŹźŻż';
+  const faces = ["600 100px 'Playfair Display'", "400 32px 'Inter'", "600 32px 'Inter'"];
+  await Promise.all(faces.flatMap((f) => [document.fonts.load(f, 'Aa0'), document.fonts.load(f, polish)]).concat(document.fonts.load("400 32px 'Macondo'", '0:')));
+  await document.getElementById('herb').decode();
+}
+
+gate.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (unlocked) return;
+  msg.textContent = '';
+  if (!window.KK_ENC) { msg.textContent = 'Brak pliku z nazwiskami.'; return; }
+  if (!window.crypto || !crypto.subtle) { msg.textContent = 'Ta przeglądarka nie może odszyfrować nazwisk.'; return; }
+  let names;
+  try {
+    names = await decryptNames(pass.value);
+  } catch {
+    msg.textContent = 'Złe hasło.';
+    pass.value = '';
+    pass.focus();
+    return;
+  }
+  document.querySelectorAll('[data-name]').forEach((el) => { el.textContent = names[el.dataset.name]; });
+  try { await assetsReady(); } catch {}
+  unlocked = true;
+  pass.value = '';
+  renderTime();
+  show(0);
+  stage.classList.add('ready');
+  gate.remove();
+});
+</script>
+</body>
+</html>
